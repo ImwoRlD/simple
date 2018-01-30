@@ -15,6 +15,6 @@ public class CookiesManager {
     }
     public List<Cookie> loadCookies(String uuid){
         Cache cache=cacheManager.getCache("captcha");
-
+        return null;
     }
 }

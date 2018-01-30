@@ -1,9 +1,14 @@
 package utils;
 
+import Model.Term;
+import jdk.nashorn.internal.runtime.regexp.joni.Regex;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class ParseUtil {
+    public static final String SPRING_TERM="学年春(两学期)";
+    public static final String AUTUMN_TERM="学年秋(两学期)";
     public static final Map<String,Integer> SCORE_MAP;
     static {
         SCORE_MAP=new HashMap<String,Integer>(16);
@@ -30,5 +35,18 @@ public class ParseUtil {
             str=str.split(".")[0];
             return Integer.parseInt(str);
         }
+    }
+    public static Term str2Term(String str){
+        Term term=new Term();
+        String temp=str.substring(5,6);
+        String termText=str.substring(0,4);
+        if (Integer.parseInt(temp)>=6){
+            term.setText((Integer.parseInt(termText)-1)+"-"+temp+SPRING_TERM);
+            term.setTermNum(2);
+        }else {
+            term.setText(temp+"-"+(Integer.parseInt(termText)+1)+AUTUMN_TERM);
+            term.setTermNum(1);
+        }
+        return term;
     }
 }

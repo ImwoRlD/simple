@@ -20,7 +20,6 @@ import java.util.Map;
 
 public class HtmlParser {
     public SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-
     public StudentInfo parseStudentInfo(String infohtml) {
         StudentInfo studentInfo = new StudentInfo();
         Element infotable = Jsoup.parse(infohtml).select("table#tblView").get(0);
@@ -51,11 +50,11 @@ public class HtmlParser {
 
     public Collection<TimeScore> parseStudentScore(String passhtml,String falihtml){
         Map<Term,TimeScore> map=new HashMap<>();
-        addAllScore(map,passhtml);
+        addPassScore(map,passhtml);
         addFailSocre(map,falihtml);
         return null;
     }
-    public void addAllScore(Map<Term,TimeScore> map,String passhtml){
+    public void addPassScore(Map<Term,TimeScore> map,String passhtml){
         Document document=Jsoup.parse(passhtml);
         Elements tableHead=document.select("table#tblHead");
         Elements tableTop=document.select("table.titleTop2");
@@ -81,7 +80,23 @@ public class HtmlParser {
             }
         }
     }
-    public void addFailSocre(Map<Term,TimeScore> map,String fahtml){
-
+    public void addFailSocre(Map<Term,TimeScore> map,String failhtml){
+        Document document=Jsoup.parse(failhtml);
+        Elements tables=document.select("table.titleTop2");
+        for (Element table:tables){
+            Elements trs=table.select("table#user").select("tbody").select("tr");
+            for (int i=0;i<trs.size();i++){
+                Score score=new Score();
+                String termStr=trs.get(i).select("td").get(7).text();
+                Term term=ParseUtil.str2Term(termStr);
+                String name=trs.get(i).select("td").get(2).text();
+                String type=trs.get(i).select("td").get(5).text();
+                String sco=trs.get(i).select("td").get(6).text();
+                score.setName(name);
+                score.setType(type);
+                score.setScore(sco);
+                score.setPoint();
+            }
+        }
     }
 }
