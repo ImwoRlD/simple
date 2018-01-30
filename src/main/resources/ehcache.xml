@@ -18,7 +18,7 @@
     </defaultCache>
 
     <!-- helloworld缓存 -->
-    <cache name="HelloWorldCache"
+    <cache name="Cookies"
            maxElementsInMemory="1000"
            eternal="false"
            timeToIdleSeconds="5"

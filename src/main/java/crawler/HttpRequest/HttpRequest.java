@@ -63,7 +63,7 @@ public class HttpRequest {
             if (requestContext.isUpload()){
                 ImageUploader.upload(httpResponse.getBin(),requestContext.getUuid());
             }
-            httpResponse.setHeaders(new HashMap<>());
+            httpResponse.setHeaders(new HashMap<String,String>());
             for (Header header:response.getAllHeaders()){
                 httpResponse.getHeaders().put(header.getName(),header.getValue());
             }
