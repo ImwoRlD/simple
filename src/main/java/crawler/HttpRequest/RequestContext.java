@@ -12,19 +12,23 @@ public class RequestContext {
     private String RequestMethod;
     private String Charset = "utf-8";
     private String responseCharset;
+    private String sessioonId;
     private String proxyAddr;
     private String proxyPort;
     private String uuid;
     private boolean isUpload;
     private boolean isClear;
-    private List<Cookie> Cookies;
     private Map<String, String> extraHeaders;
     private Map<String, String> queryParam;
     private Map<String, String> queryForm;
     public Session session;
 
-    public void addCookie(Cookie cookie) {
+    public String getSessioonId() {
+        return sessioonId;
+    }
 
+    public void setSessioonId(String sessioonId) {
+        this.sessioonId = sessioonId;
     }
 
     public String getUuid() {

@@ -1,5 +1,6 @@
 package crawler.HttpRequest;
 
+import Manager.CookiesManager;
 import Uploader.ImageUploader;
 import org.apache.http.Header;
 import org.apache.http.client.CookieStore;
@@ -8,6 +9,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -26,6 +28,9 @@ public class HttpRequest {
     private HttpRequestBase requestBase;
     private RequestContext requestContext;
     private CookieStore cookieStore = new BasicCookieStore();
+    public HttpRequest(RequestContext requestContext){
+        this.requestContext=requestContext;
+    }
 
     public CookieStore getCookieStore() {
         return cookieStore;
@@ -54,6 +59,10 @@ public class HttpRequest {
         HttpResponse httpResponse = new HttpResponse();
         if (requestContext.isClear()) {
             cookieStore.clear();
+        }else {
+            for (Cookie cookie:CookiesManager.loadCookies(requestContext.getSessioonId())){
+                cookieStore.addCookie(cookie);
+            }
         }
         CloseableHttpClient httpClient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
         this.init();
@@ -64,9 +73,11 @@ public class HttpRequest {
             httpResponse.setCode(response.getStatusLine().getStatusCode());
             httpResponse.setBin(EntityUtils.toByteArray(response.getEntity()));
             if (requestContext.isUpload()) {
-                ImageUploader.upload(httpResponse.getBin(), requestContext.getUuid());
+                httpResponse.setImageAddres(ImageUploader.upload(httpResponse.getBin(), requestContext.getUuid()));
             }
-            httpResponse.setHeaders(new HashMap<String, String>());
+            httpResponse.setHeaders(new HashMap<>());
+            httpResponse.setCookies(cookieStore.getCookies());
+            CookiesManager.saveCookies(requestContext.getSessioonId(),cookieStore.getCookies());
             for (Header header : response.getAllHeaders()) {
                 httpResponse.getHeaders().put(header.getName(), header.getValue());
             }

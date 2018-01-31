@@ -1,7 +1,10 @@
 package crawler.HttpRequest;
 
 
+import org.apache.http.cookie.Cookie;
+
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Map;
 
 public class HttpResponse {
@@ -10,7 +13,7 @@ public class HttpResponse {
     private Map<String, String> headers;
     private byte[] bin;
     private String imageAddres;
-
+    private List<Cookie> cookies;
     public String string() {
         String str;
         if (charset == null) {
@@ -22,6 +25,14 @@ public class HttpResponse {
             str = "不支持的编码类型";
         }
         return str;
+    }
+
+    public List<Cookie> getCookies() {
+        return cookies;
+    }
+
+    public void setCookies(List<Cookie> cookies) {
+        this.cookies = cookies;
     }
 
     public int getCode() {
