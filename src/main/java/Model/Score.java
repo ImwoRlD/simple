@@ -1,6 +1,8 @@
 package Model;
 
-public class Score {
+import java.io.Serializable;
+
+public class Score implements Serializable{
     private String name;
     private Integer point;
     private String type;
