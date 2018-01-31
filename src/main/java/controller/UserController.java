@@ -11,8 +11,8 @@ import service.UserService;
 @Controller
 public class UserController {
     @RequestMapping("/login")
-    public String login(@RequestParam(value = "user_name",required = true) String username,
-                        @RequestParam(value="user_password",required = true) String userpassword){
-       return null;
+    public String login(@RequestParam(value = "user_name", required = true) String username,
+                        @RequestParam(value = "user_password", required = true) String userpassword) {
+        return null;
     }
 }

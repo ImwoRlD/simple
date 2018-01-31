@@ -7,18 +7,19 @@ import java.util.Map;
 public class HttpResponse {
     private int code;
     private String charset;
-    private Map<String,String> headers;
+    private Map<String, String> headers;
     private byte[] bin;
     private String imageAddres;
-    public String string(){
+
+    public String string() {
         String str;
-        if (charset==null){
-            charset="utf-8";
+        if (charset == null) {
+            charset = "utf-8";
         }
         try {
-            str=new String(bin,charset);
-        }catch (UnsupportedEncodingException e){
-            str="不支持的编码类型";
+            str = new String(bin, charset);
+        } catch (UnsupportedEncodingException e) {
+            str = "不支持的编码类型";
         }
         return str;
     }

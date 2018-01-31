@@ -4,7 +4,7 @@ import Manager.CookiesManager;
 import Uploader.ImageUploader;
 
 public class Main {
-    public static void main(String args[]){
+    public static void main(String args[]) {
 
     }
 }

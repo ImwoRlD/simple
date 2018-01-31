@@ -22,22 +22,22 @@ public class Term {
 
     @Override
     public int hashCode() {
-        return termNum*31-2;
+        return termNum * 31 - 2;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this==obj){
+        if (this == obj) {
             return true;
         }
-        if (obj==null||getClass()!=obj.getClass()){
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        Term term=(Term)obj;
-        if (!term.text.equals(this.text)){
+        Term term = (Term) obj;
+        if (!term.text.equals(this.text)) {
             return false;
         }
-        if (term.termNum!=this.termNum){
+        if (term.termNum != this.termNum) {
             return false;
         }
         return true;

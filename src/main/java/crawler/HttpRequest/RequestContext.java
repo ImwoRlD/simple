@@ -10,7 +10,7 @@ import java.util.UUID;
 public class RequestContext {
     private String requestURL;
     private String RequestMethod;
-    private String Charset="utf-8";
+    private String Charset = "utf-8";
     private String responseCharset;
     private String proxyAddr;
     private String proxyPort;
@@ -18,13 +18,15 @@ public class RequestContext {
     private boolean isUpload;
     private boolean isClear;
     private List<Cookie> Cookies;
-    private Map<String,String> extraHeaders;
-    private Map<String,String> queryParam;
-    private Map<String,String> queryForm;
+    private Map<String, String> extraHeaders;
+    private Map<String, String> queryParam;
+    private Map<String, String> queryForm;
     public Session session;
-    public void addCookie(Cookie cookie){
+
+    public void addCookie(Cookie cookie) {
 
     }
+
     public String getUuid() {
         return uuid;
     }
@@ -33,54 +35,63 @@ public class RequestContext {
         this.uuid = uuid;
     }
 
-    public RequestContext(){
-        this.uuid=UUID.randomUUID().toString();
+    public RequestContext() {
+        this.uuid = UUID.randomUUID().toString();
     }
-    public Object session(String name){
-        if (this.session==null){
+
+    public Object session(String name) {
+        if (this.session == null) {
             return null;
         }
         return session.getMap().get("name");
     }
-    public void session(String name,Object object){
-        if (this.session==null){
-            this.session=new Session();
+
+    public void session(String name, Object object) {
+        if (this.session == null) {
+            this.session = new Session();
         }
-        this.session.getMap().put(name,object);
+        this.session.getMap().put(name, object);
     }
-    public RequestContext url(String url){
-        this.requestURL=url;
+
+    public RequestContext url(String url) {
+        this.requestURL = url;
         return this;
     }
-    public RequestContext GET(){
-        this.RequestMethod="GET";
+
+    public RequestContext GET() {
+        this.RequestMethod = "GET";
         return this;
     }
-    public RequestContext POST(){
-        this.RequestMethod="POST";
+
+    public RequestContext POST() {
+        this.RequestMethod = "POST";
         return this;
     }
-    public RequestContext header(String name,String value){
-        if (this.extraHeaders==null){
-            this.extraHeaders=new HashMap<>();
+
+    public RequestContext header(String name, String value) {
+        if (this.extraHeaders == null) {
+            this.extraHeaders = new HashMap<>();
         }
-        this.extraHeaders.put(name,value);
+        this.extraHeaders.put(name, value);
         return this;
     }
-    public RequestContext query(String name,String value){
-        if (this.queryParam==null){
-            this.queryParam=new HashMap<>();
+
+    public RequestContext query(String name, String value) {
+        if (this.queryParam == null) {
+            this.queryParam = new HashMap<>();
         }
-        this.queryParam.put(name,value);
+        this.queryParam.put(name, value);
         return this;
     }
-    public RequestContext form(String name,String value){
-        if (this.getQueryForm()==null){
-            this.queryForm=new HashMap<>();
+
+    public RequestContext form(String name, String value) {
+        if (this.getQueryForm() == null) {
+            this.queryForm = new HashMap<>();
         }
-        this.queryForm.put(name,value);
+        this.queryForm.put(name, value);
         return this;
     }
+
     public String getResponseCharset() {
         return responseCharset;
     }
@@ -88,6 +99,7 @@ public class RequestContext {
     public void setResponseCharset(String responseCharset) {
         this.responseCharset = responseCharset;
     }
+
     public String getProxyAddr() {
         return proxyAddr;
     }
@@ -103,6 +115,7 @@ public class RequestContext {
     public void setProxyPort(String proxyPort) {
         this.proxyPort = proxyPort;
     }
+
     public String getRequestURL() {
         return requestURL;
     }
