@@ -2,7 +2,7 @@ package Model;
 
 public class Score {
     private String name;
-    private Float point;
+    private Integer point;
     private String type;
     private String score;
     private Integer number;
@@ -24,11 +24,11 @@ public class Score {
         this.name = name;
     }
 
-    public Float getPoint() {
+    public Integer getPoint() {
         return point;
     }
 
-    public void setPoint(Float point) {
+    public void setPoint(Integer point) {
         this.point = point;
     }
 
@@ -54,5 +54,17 @@ public class Score {
 
     public void setNumber(Integer number) {
         this.number = number;
+    }
+
+    @Override
+    public String toString() {
+        return "Score{" +
+                "name='" + name + '\'' +
+                ", point=" + point +
+                ", type='" + type + '\'' +
+                ", score='" + score + '\'' +
+                ", number=" + number +
+                ", remark='" + remark + '\'' +
+                '}';
     }
 }

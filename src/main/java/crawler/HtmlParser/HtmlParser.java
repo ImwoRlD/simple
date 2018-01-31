@@ -13,10 +13,7 @@ import utils.ParseUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class HtmlParser {
     public SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -52,7 +49,9 @@ public class HtmlParser {
         Map<Term,TimeScore> map=new HashMap<>();
         addPassScore(map,passhtml);
         addFailSocre(map,falihtml);
-        return null;
+        List<TimeScore> list=new ArrayList<>();
+        list.addAll(map.values());
+        return list;
     }
     public void addPassScore(Map<Term,TimeScore> map,String passhtml){
         Document document=Jsoup.parse(passhtml);
@@ -72,7 +71,7 @@ public class HtmlParser {
                 String type=tr.select("td").get(5).text();
                 String sco=tr.select("td").get(6).text();
                 score.setName(name);
-                score.setPoint(point);
+                score.setPoint((int)(point*100));
                 score.setType(type);
                 score.setScore(sco);
                 score.setNumber(ParseUtil.parseNumScore(sco));
@@ -95,7 +94,10 @@ public class HtmlParser {
                 score.setName(name);
                 score.setType(type);
                 score.setScore(sco);
-                score.setPoint();
+                score.setPoint(0);
+                score.setNumber(0);
+                score.setRemark("不及格");
+                CastUtil.addScoreToScoreMap(map,term,score);
             }
         }
     }
