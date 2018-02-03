@@ -6,6 +6,8 @@ import crawler.HtmlParser.HtmlParser;
 import crawler.HttpRequest.HttpRequest;
 import crawler.HttpRequest.HttpResponse;
 import crawler.HttpRequest.RequestContext;
+import dao.StudentDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import utils.CastUtil;
 
@@ -13,6 +15,8 @@ import java.util.List;
 
 @Service
 public class TestService {
+    @Autowired
+    private StudentDao studentDao;
     public HtmlParser parser=new HtmlParser();
     public String getcaptcha(String username,String password){
         RequestContext requestContext=new RequestContext();

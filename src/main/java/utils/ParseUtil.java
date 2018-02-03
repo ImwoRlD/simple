@@ -34,8 +34,7 @@ public class ParseUtil {
         if (SCORE_MAP.get(str) != null) {
             return SCORE_MAP.get(str);
         } else {
-            str = str.split(".")[0];
-            return Integer.parseInt(str);
+            return (int)(Float.parseFloat(str));
         }
     }
 
@@ -44,10 +43,10 @@ public class ParseUtil {
         String temp = str.substring(5, 6);
         String termText = str.substring(0, 4);
         if (Integer.parseInt(temp) >= 6) {
-            term.setText((Integer.parseInt(termText) - 1) + "-" + temp + SPRING_TERM);
+            term.setText((Integer.parseInt(termText) - 1) + "-" + termText + SPRING_TERM);
             term.setTermNum(2);
         } else {
-            term.setText(temp + "-" + (Integer.parseInt(termText) + 1) + AUTUMN_TERM);
+            term.setText(termText + "-" + (Integer.parseInt(termText) + 1) + AUTUMN_TERM);
             term.setTermNum(1);
         }
         return term;

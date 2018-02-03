@@ -15,8 +15,10 @@ public class CastUtil {
             timeScore.setTerm(term);
             timeScore.setScoreList(new ArrayList<>());
             timeScore.getScoreList().add(score);
+            map.put(term,timeScore);
+        }else {
+            map.get(term).getScoreList().add(score);
         }
-        map.get(term).getScoreList().add(score);
     }
     public static String buildUrl(String str){
         String url;
@@ -35,6 +37,7 @@ public class CastUtil {
                 break;
             case "fail":
                 url=URL+"/gradeLnAllAction.do?type=ln&oper=bjg";
+                break;
             default:
                 url=URL+"loginAction.do";
                 break;
