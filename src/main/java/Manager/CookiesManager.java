@@ -10,11 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CookiesManager {
-    private static final CacheManager cacheManager=CacheManager.create("./src/main/resources/ehcache.xml");;
-
-    private CookiesManager() {
-    }
-
+    private static final CacheManager cacheManager=CacheManager.create("F://captcha//ehcache.xml");
     public static Cookie loadCookies(String sessionid) {
         Cache cache = cacheManager.getCache("Cookies");
         Element element=cache.get(sessionid);

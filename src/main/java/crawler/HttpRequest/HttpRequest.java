@@ -1,6 +1,7 @@
 package crawler.HttpRequest;
 
 import Manager.CookiesManager;
+import Manager.MemcacheManager;
 import Uploader.ImageUploader;
 import org.apache.http.Header;
 import org.apache.http.client.CookieStore;
@@ -60,7 +61,7 @@ public class HttpRequest {
         if (requestContext.isClear()) {
             cookieStore.clear();
         }else {
-            cookieStore.addCookie(CookiesManager.loadCookies(requestContext.getSessioonId()));
+            cookieStore.addCookie((Cookie) MemcacheManager.getInstance().get(requestContext.getSessioonId()));
         }
         CloseableHttpClient httpClient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
         this.init();
@@ -75,7 +76,7 @@ public class HttpRequest {
             }
             httpResponse.setHeaders(new HashMap<>());
             httpResponse.setCookies(cookieStore.getCookies());
-            CookiesManager.saveCookies(requestContext.getSessioonId(),cookieStore.getCookies().get(0));
+            MemcacheManager.getInstance().set(requestContext.getSessioonId(),cookieStore.getCookies().get(0));
             for (Header header : response.getAllHeaders()) {
                 httpResponse.getHeaders().put(header.getName(), header.getValue());
             }

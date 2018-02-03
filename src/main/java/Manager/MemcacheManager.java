@@ -21,7 +21,7 @@ public class MemcacheManager {
     }
     private MemcacheManager(){
         try {
-            client=new XMemcachedClientBuilder(AddrUtil.getAddresses("127.0.0.1:11311")).build();
+            client=new XMemcachedClientBuilder(AddrUtil.getAddresses("127.0.0.1:11211")).build();
         }catch (IOException e){
             e.printStackTrace();
         }

@@ -46,7 +46,7 @@ public class HtmlParser {
         return studentInfo;
     }
 
-    public Collection<TimeScore> parseStudentScore(String passhtml, String falihtml) {
+    public List<TimeScore> parseStudentScore(String passhtml, String falihtml) {
         Map<Term, TimeScore> map = new HashMap<>();
         addPassScore(map, passhtml);
         addFailSocre(map, falihtml);
@@ -55,7 +55,7 @@ public class HtmlParser {
         return list;
     }
 
-    public void addPassScore(Map<Term, TimeScore> map, String passhtml) {
+    private void addPassScore(Map<Term, TimeScore> map, String passhtml) {
         Document document = Jsoup.parse(passhtml);
         Elements tableHead = document.select("table#tblHead");
         Elements tableTop = document.select("table.titleTop2");
@@ -82,7 +82,7 @@ public class HtmlParser {
         }
     }
 
-    public void addFailSocre(Map<Term, TimeScore> map, String failhtml) {
+    private void addFailSocre(Map<Term, TimeScore> map, String failhtml) {
         Document document = Jsoup.parse(failhtml);
         Elements tables = document.select("table.titleTop2");
         for (Element table : tables) {
@@ -101,6 +101,16 @@ public class HtmlParser {
                 score.setNumber(ParseUtil.parseNumScore(sco));
                 score.setRemark("不及格");
                 CastUtil.addScoreToScoreMap(map, term, score);
+                for (Term temp:map.keySet()){
+                    TimeScore timeScore=map.get(temp);
+                    List<Score> list=timeScore.getScoreList();
+                    for (int k=0;k<list.size();k++){
+                        Score tempscore=list.get(k);
+                        if (tempscore.getName().equals(score.getName())){
+                            tempscore.setRemark("重修");
+                        }
+                    }
+                }
             }
         }
     }

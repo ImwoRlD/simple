@@ -9,13 +9,4 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Controller
 public class UserController {
-    @RequestMapping("/login")
-    public String login(@RequestParam(value = "user_name", required = true) String username,
-                        @RequestParam(value = "user_password", required = true) String userpassword,
-                        @RequestParam(value = "sessionId", required = true) String sessionId) {
-        return null;
-    }
-    public String render(Object obj){
-        return JSONObject.toJSONString(obj);
-    }
 }
