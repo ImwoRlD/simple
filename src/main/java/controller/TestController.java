@@ -33,9 +33,6 @@ public class TestController {
     }
     @RequestMapping(value = "/test")
     public String test(){
-        StudentInfo studentInfo=new StudentInfo();
-        studentInfo.setName("dsadsa");
-        studentInfo.setClassId("321313");
-        return null;
+        return "";
     }
 }

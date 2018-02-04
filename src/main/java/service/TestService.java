@@ -16,6 +16,8 @@ import java.util.List;
 @Service
 public class TestService {
     @Autowired
+    private SaveService saveService;
+    @Autowired
     private StudentDao studentDao;
     public HtmlParser parser=new HtmlParser();
     public String getcaptcha(String username,String password){
@@ -44,6 +46,7 @@ public class TestService {
         HttpResponse inforesult=new HttpRequest(infoContext).sendWithCookieStore();
         String info=inforesult.string();
         StudentInfo studentInfo=parser.parseStudentInfo(info);
+        saveService.saveStudent(studentInfo);
         RequestContext passContext=new RequestContext();
         passContext.setSessioonId(username);
         passContext.setResponseCharset("gb2312");
@@ -57,6 +60,7 @@ public class TestService {
         HttpResponse failresult=new HttpRequest(failContext).sendWithCookieStore();
         String failhtml=failresult.string();
         List<TimeScore> list=parser.parseStudentScore(passhtml,failhtml);
+        saveService.saveStudentScore(studentInfo,list);
         return "sdsa";
     }
 }

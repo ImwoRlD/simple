@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.ScoreDao">
+    <insert id="saveStudentScore" parameterType="Model.Student_Score_VO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO student_score (name,term_text,term_no,score_name,score_point,score_type,score_score,score_number,score_remark)
+        VALUES (#{studentInfo.name},#{term.text},#{term.termNum},#{score.name},#{score.point},#{score.type},#{score.score},#{score.number},#{score.remark})
+    </insert>
+</mapper>

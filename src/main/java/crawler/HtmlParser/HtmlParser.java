@@ -33,13 +33,13 @@ public class HtmlParser {
             String nation = infotable.select("tr").get(5).select("td").get(3).text();
             studentInfo.setLoginName(loginName);
             studentInfo.setPassword(password);
-            studentInfo.setName(name);
+            studentInfo.setNation(nation);
             studentInfo.setBirthDate(birthDate);
             studentInfo.setSex(sex);
             studentInfo.setProvince(province);
             studentInfo.setClassId(classId);
             studentInfo.setMajor(major);
-            studentInfo.setName(nation);
+            studentInfo.setName(name);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -100,7 +100,6 @@ public class HtmlParser {
                 score.setPoint(0);
                 score.setNumber(ParseUtil.parseNumScore(sco));
                 score.setRemark("不及格");
-                CastUtil.addScoreToScoreMap(map, term, score);
                 for (Term temp:map.keySet()){
                     TimeScore timeScore=map.get(temp);
                     List<Score> list=timeScore.getScoreList();
@@ -111,6 +110,7 @@ public class HtmlParser {
                         }
                     }
                 }
+                CastUtil.addScoreToScoreMap(map, term, score);
             }
         }
     }
