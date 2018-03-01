@@ -18,6 +18,9 @@
 
     <!-- 静态资源默认servlet配置 -->
     <mvc:default-servlet-handler/>
+    <mvc:resources mapping="/resources/**" location="/WEB-INF/css/" />
+    <mvc:resources mapping="/images/**" location="/WEB-INF/img/" />
+    <mvc:resources mapping="/js/**" location="/WEB-INF/js/" />
 
     <!-- 配置jsp 显示ViewResolver -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

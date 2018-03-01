@@ -14,7 +14,7 @@ public class IndexController {
     private static final SimpleDateFormat SDF = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
     private static final Date startTime = new Date();
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "/in", method = RequestMethod.GET)
     public String index() {
         JSONObject object = new JSONObject();
         object.put("http-status", 200);
