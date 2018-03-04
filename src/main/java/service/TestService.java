@@ -1,66 +1,70 @@
 package service;
 
-import Model.StudentInfo;
-import Model.TimeScore;
+import Model.*;
 import crawler.HtmlParser.HtmlParser;
 import crawler.HttpRequest.HttpRequest;
 import crawler.HttpRequest.HttpResponse;
 import crawler.HttpRequest.RequestContext;
+import dao.ScoreDao;
 import dao.StudentDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import utils.CastUtil;
+import utils.ContextFactory;
 
 import java.util.List;
 
 @Service
 public class TestService {
     @Autowired
-    private SaveService saveService;
-    @Autowired
     private StudentDao studentDao;
+    @Autowired
+    private ScoreDao scoreDao;
     public HtmlParser parser=new HtmlParser();
-    public String getcaptcha(String username,String password){
-        RequestContext requestContext=new RequestContext();
-        requestContext.setSessioonId(username);
-        requestContext.setClear(true);
-        requestContext.GET().url(CastUtil.buildUrl("captcha")).setUpload(true);
-        HttpRequest request=new HttpRequest(requestContext);
-        HttpResponse response=request.sendWithCookieStore();
+    public String getcaptcha(String sessionid){
+        RequestContext context=ContextFactory.getContext("getcaptcha",sessionid);
+        HttpResponse response=new HttpRequest(context).sendWithCookieStore();
         return response.getImageAddres();
     }
-    public String login(String username,String password,String captcha){
-        RequestContext loginContext=new RequestContext();
-        loginContext.setSessioonId(username);
-        loginContext.setResponseCharset("gb2312");
-        loginContext.POST().url(CastUtil.buildUrl("login"))
-                .form("zjh",username)
-                .form("mm",password)
-                .form("v_yzm",captcha);
+    public void fetchData(String sessionid,String username,String password,String captcha){
+        //登录获取cookie
+        RequestContext loginContext= ContextFactory.getContext("login",sessionid,username,password,captcha);
         HttpResponse loginresult=new HttpRequest(loginContext).sendWithCookieStore();
-        String result=loginresult.string();
-        RequestContext infoContext=new RequestContext();
-        infoContext.setSessioonId(username);
-        infoContext.setResponseCharset("gb2312");
-        infoContext.GET().url(CastUtil.buildUrl("info"));
+        //爬取info 存储结果
+        RequestContext infoContext=ContextFactory.getContext("info",sessionid);
         HttpResponse inforesult=new HttpRequest(infoContext).sendWithCookieStore();
         String info=inforesult.string();
         StudentInfo studentInfo=parser.parseStudentInfo(info);
-        saveService.saveStudent(studentInfo);
-        RequestContext passContext=new RequestContext();
-        passContext.setSessioonId(username);
-        passContext.setResponseCharset("gb2312");
-        passContext.GET().url(CastUtil.buildUrl("pass"));
+        studentDao.saveStudent(studentInfo);
+        //爬取pass成绩与fail成绩
+        RequestContext passContext=ContextFactory.getContext("pass",sessionid);
         HttpResponse passresult=new HttpRequest(passContext).sendWithCookieStore();
         String passhtml=passresult.string();
-        RequestContext failContext=new RequestContext();
-        failContext.setSessioonId(username);
-        failContext.setResponseCharset("gb2312");
-        failContext.GET().url(CastUtil.buildUrl("fail"));
+        RequestContext failContext=ContextFactory.getContext("fail",sessionid);
         HttpResponse failresult=new HttpRequest(failContext).sendWithCookieStore();
         String failhtml=failresult.string();
+        //存储成绩结果
         List<TimeScore> list=parser.parseStudentScore(passhtml,failhtml);
-        saveService.saveStudentScore(studentInfo,list);
-        return "sdsa";
+        saveStudentScore(studentInfo,list);
+    }
+
+    public boolean checkStudentInfo(String username) {
+        StudentInfo studentInfo=studentDao.getStudentByUsername(username);
+        if (studentInfo==null){
+            return false;
+        }
+        return true;
+    }
+    private void saveStudentScore(StudentInfo studentInfo, List<TimeScore> list){
+        for (int i=0;i<list.size();i++){
+            TimeScore timeScore=list.get(i);
+            List<Score> scoreList=timeScore.getScoreList();
+            Term term=timeScore.getTerm();
+            for (int j=0;j<scoreList.size();j++){
+                Score score=scoreList.get(j);
+                Student_Score_VO vo=new Student_Score_VO(studentInfo,score,term);
+                scoreDao.saveStudentScore(vo);
+            }
+        }
     }
 }

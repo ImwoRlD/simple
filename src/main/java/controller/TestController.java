@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import service.DataService;
 import service.TestService;
 
 import javax.annotation.Resource;
@@ -20,26 +21,39 @@ import javax.servlet.http.HttpServletResponse;
 public class TestController {
     @Autowired
     private TestService testService;
-    @RequestMapping(value = "/getcaptcha",method = RequestMethod.GET)
+    @Autowired
+    private DataService dataService;
+    @RequestMapping(value = "/getcaptcha",method = RequestMethod.GET,produces = "application/json; charset=utf-8")
     @ResponseBody
-    public String testFetch(HttpServletRequest request,HttpServletResponse response,
-                            @RequestParam(value = "username") String username,
-                            @RequestParam(value = "password") String password){
+    public String getCaptcha(@RequestParam(value = "sessionId") String sessionId){
         JSONObject json=new JSONObject();
-        String url=testService.getcaptcha(username,password);
+        String url=testService.getcaptcha(sessionId);
         json.put("url",url);
         return json.toString();
     }
-    @RequestMapping(value = "/login",method = RequestMethod.GET)
-    public String login(@RequestParam(value = "username") String username,
+    @RequestMapping(value = "/datafetch",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public String datafetch(@RequestParam(value = "sessionId") String sessionId,
+                        @RequestParam(value = "username") String username,
                         @RequestParam(value = "password") String password,
                         @RequestParam(value = "captcha") String captcha){
-        String result="";
-        testService.login(username,password,captcha);
-        return result;
+        JSONObject json=new JSONObject();
+        if (testService.checkStudentInfo(username)){
+            json.put("msg","个人信息已经存在,请返回首页登录查看");
+            return json.toString();
+        }
+        Long begin=System.currentTimeMillis();
+        testService.fetchData(sessionId,username,password,captcha);
+        Long end=System.currentTimeMillis();
+        json.put("msg","爬取成功,耗时"+(end-begin)/1000+"s,请返回首页登录查看");
+        return json.toString();
     }
-    @RequestMapping(value = "/test")
-    public String test(){
-        return "";
+    @RequestMapping(value = "/persondata",method = RequestMethod.GET,produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public String test(HttpServletRequest request){
+//        String username=request.getCookies()[0].getValue();
+        String username="20142206453";
+        String json=dataService.personData(username);
+        return json;
     }
 }

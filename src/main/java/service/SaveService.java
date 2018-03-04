@@ -18,15 +18,5 @@ public class SaveService {
         studentDao.saveStudent(studentInfo);
     }
     public void saveStudentScore(StudentInfo studentInfo, List<TimeScore> list){
-        for (int i=0;i<list.size();i++){
-            TimeScore timeScore=list.get(i);
-            List<Score> scoreList=timeScore.getScoreList();
-            Term term=timeScore.getTerm();
-            for (int j=0;j<scoreList.size();j++){
-                Score score=scoreList.get(j);
-                Student_Score_VO vo=new Student_Score_VO(studentInfo,score,term);
-                scoreDao.saveStudentScore(vo);
-            }
-        }
     }
 }

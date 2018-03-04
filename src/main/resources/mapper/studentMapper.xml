@@ -4,6 +4,10 @@
 <mapper namespace="dao.StudentDao">
     <insert id="saveStudent" parameterType="Model.StudentInfo" useGeneratedKeys="true" keyProperty="id">
         insert INTO studentinfo (name,loginName,password,birthday,sex,province,classId,major,nation) VALUES
-        (#{name},#{loginName},#{password},#{birthDate},#{sex},#{province},#{classId},#{major},#{nation})
+        (#{name},#{loginName},#{password},#{birthDate},#{sex},#{province},#{classId},#{major},#{nation});
     </insert>
+    <select id="getStudentByUsername" parameterType="java.lang.String" resultType="Model.StudentInfo">
+        select * FROM studentinfo
+        where loginName=#{username};
+    </select>
 </mapper>

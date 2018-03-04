@@ -15,22 +15,23 @@
     </head>
     <script>
         $(function () {
+            var uuid=Math.random().toString(36).substr(2);
+            $("input[name=sessionId]").val(uuid)
+            $.ajax({
+                type:"get",
+                url:"/getcaptcha",
+                data:{"sessionId":uuid},
+                dataType:"json",
+                success:function (data) {
+                    $("div#img").append("<img src=./img/"+data.url+">")
+                },
+                error:function(){
+                    alert("fail");
+                }
+            });
             $("#radio1").click(function(){
-                var val1=$("input#username").text()
-                var val2=$("input#passowrd").text()
                 $("div#captcha").removeAttr("hidden");
-                $.ajax({
-                    type:"get",
-                    url:"/getcaptcha",
-                    data:{username:val1,password:val2},
-                    dataType:"json",
-                    success:function (data) {
-                        $("div#img").append("<img src=./img/e97f16c0-ec87-42e5-982f-dcfa754085d7.jpeg>")
-                    },
-                    error:function(){
-                        alert("fail");
-                    }
-                })
+
             });
             $("#radio2").click(function(){
                 $("div#captcha").attr("hidden","")
@@ -39,51 +40,55 @@
     </script>
     <body>
         <div class="container">
-        <div class="row">
-            <div class="col-6" align="center"><h1>学生成绩爬取分析系统</h1></div>
+            <div class="row">
+                <div class="col-6" align="center"><h1>学生成绩爬取分析系统</h1></div>
+            </div>
+            <div class="row">
+                <form class="form-horizontal" role="form" action="/datafetch" method="post">
+                    <input type="hidden" name="sessionId" value="">
+                    <div class="form-group">
+                        <label for="username" class="col-2 control-label">账号</label>
+                        <div class="col-10">
+                            <input type="text" class="form-control" name="username" id="username"
+                                   placeholder="请输入账号">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="col-2 control-label">密码</label>
+                        <div class="col-10">
+                            <input type="text" class="form-control" name="password" id="password"
+                                   placeholder="请输入密码">
+                        </div>
+                    </div>
+                    <div class="form-group" id="captcha" hidden>
+                        <label for="captcha" class="col-2 control-label">验证码</label>
+                        <div class="col-10">
+                            <input type="text" class="form-control" name="captcha"
+                                   placeholder="请输入验证码">
+                        </div>
+                        <div id="img"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-2 control-label">登录类型</label>
+                        <div class="col-10">
+                            <label class="radio-inline">
+                                <input type="radio" name="type" id="radio1" value="option1"> 数据爬取
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="type" id="radio2" value="option1"> 个人数据
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="type" id="radio3"  value="option3"> 整体数据
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-offset-2 col-10">
+                            <button type="submit" id="login" class="btn btn-default">登录</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="row">
-            <form class="form-horizontal" role="form" action="/in">
-                <div class="form-group">
-                    <label for="username" class="col-2 control-label">账号</label>
-                    <div class="col-10">
-                        <input type="text" class="form-control" name="username" id="username"
-                               placeholder="请输入账号">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="password" class="col-2 control-label">密码</label>
-                    <div class="col-10">
-                        <input type="text" class="form-control" name="password" id="password"
-                               placeholder="请输入密码">
-                    </div>
-                </div>
-                <div class="form-group" id="captcha" hidden>
-                    <label for="captcha" class="col-2 control-label">验证码</label>
-                    <div class="col-10">
-                        <input type="text" class="form-control" name="captcha"
-                               placeholder="请输入验证码">
-                    </div>
-                    <div id="img"></div>
-                </div>
-                <div class="form-group">
-                    <label class="col-2 control-label">登录类型</label>
-                    <div class="col-10">
-                        <label class="radio-inline">
-                            <input type="radio" name="type" id="radio1" value="option1"> 数据爬取
-                        </label>
-                        <label class="radio-inline">
-                            <input type="radio" name="type" id="radio2"  value="option2"> 整体数据
-                        </label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-offset-2 col-10">
-                        <button type="submit" class="btn btn-default">登录</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
     </body>
 </html>

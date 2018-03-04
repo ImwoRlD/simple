@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ScoreDao {
-    public void saveStudentScore(Student_Score_VO vo);
+    void saveStudentScore(Student_Score_VO vo);
 }

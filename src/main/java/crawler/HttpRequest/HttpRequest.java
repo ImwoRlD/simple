@@ -72,7 +72,7 @@ public class HttpRequest {
             httpResponse.setCode(response.getStatusLine().getStatusCode());
             httpResponse.setBin(EntityUtils.toByteArray(response.getEntity()));
             if (requestContext.isUpload()) {
-                httpResponse.setImageAddres(ImageUploader.upload(httpResponse.getBin(), requestContext.getUuid()));
+                httpResponse.setImageAddres(ImageUploader.upload(httpResponse.getBin()));
             }
             httpResponse.setHeaders(new HashMap<>());
             httpResponse.setCookies(cookieStore.getCookies());

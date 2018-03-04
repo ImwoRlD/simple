@@ -63,7 +63,7 @@ public class HtmlParser {
             String termStr = tableHead.get(i).select("b").text();
             Elements scoreTrs = tableTop.get(i).select("table#user").select("tbody").select("tr");
             Term term = new Term();
-            term.setText(termStr);
+            term.setText(termStr.substring(0,9));
             term.setTermNum(ParseUtil.parseTermNo(termStr));
             for (int j = 0; j < scoreTrs.size(); j++) {
                 Element tr = scoreTrs.get(j);

@@ -43,10 +43,10 @@ public class ParseUtil {
         String temp = str.substring(5, 6);
         String termText = str.substring(0, 4);
         if (Integer.parseInt(temp) >= 6) {
-            term.setText((Integer.parseInt(termText) - 1) + "-" + termText + SPRING_TERM);
+            term.setText(((Integer.parseInt(termText) - 1) + "-" + termText + SPRING_TERM).substring(0,9));
             term.setTermNum(2);
         } else {
-            term.setText(termText + "-" + (Integer.parseInt(termText) + 1) + AUTUMN_TERM);
+            term.setText((termText + "-" + (Integer.parseInt(termText) + 1) + AUTUMN_TERM).substring(0,9));
             term.setTermNum(1);
         }
         return term;
