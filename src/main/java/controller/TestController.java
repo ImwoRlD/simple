@@ -50,10 +50,17 @@ public class TestController {
     }
     @RequestMapping(value = "/persondata",method = RequestMethod.GET,produces = "application/json; charset=utf-8")
     @ResponseBody
-    public String test(HttpServletRequest request){
+    public String test(HttpServletRequest request,@RequestParam(value = "page") int n){
 //        String username=request.getCookies()[0].getValue();
         String username="20142206453";
-        String json=dataService.personData(username);
+        String json=dataService.personData(username,n);
+        return json;
+    }
+    @RequestMapping(value = "/getscore",method =RequestMethod.GET,produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public String page(HttpServletRequest request,@RequestParam(value = "page") int n){
+        String username="20142206453";
+        String json=dataService.pageScore(username,n);
         return json;
     }
 }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <script src="WEB-INF/js/Chart.js"></script>
+    <script src="js/Chart.js"></script>
     <title>个人数据页面</title>
     <style>
         body{background-image:url(img/backg.jpg);
@@ -12,30 +12,83 @@
     <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
-<script>
-    $(function(){
+<script type="text/javascript">
+    function exchange(obj) {
+        var page=obj.text
         $.ajax({
             type:"get",
-            url:"/personData",
+            url:"/getscore",
+            data:{"page":page},
+            dataType:"json",
+            success:function (data) {
+                var scores=data.scores
+                var table=$("tbody#score")
+                table.empty();
+                for(var key in scores){
+                    var score=scores[key]
+                    table.append("<tr>" +
+                        "<td>"+score.term_text+"</td>" +
+                        "<td>"+score.term_no+"</td>" +
+                        "<td>"+score.score_name+"</td>" +
+                        "<td>"+(score.score_point/100)+"</td>" +
+                        "<td>"+score.score_type+"</td>" +
+                        "<td>"+score.score_score+"</td>" +
+                        "<td>"+score.score_remark+"</td>" +
+                        "</tr>")
+                }
+            },
+            error:function () {
+                alert("ajax error")
+            }
+        })
+    }
+</script>
+<script>
+    $(function(){
+        var popCanvas = document.getElementById("popChart").getContext("2d");
+        $.ajax({
+            type:"get",
+            url:"/persondata",
+            data:{"page":1},
             dataType:"json",
             success:function(data){
-                var info=data.info
-                $("name").append(info.name)
 
-            }
+                var count=data.countPage
+                var page=$("#page")
+                for(var i=1;i<=count;i++){
+                    page.append("<li><a onclick='exchange(this)'>"+i+"</a></li>")
+                }
+                var info=data.info
+                $("span#name").append(info.name)
+                $("span#sex").append(info.sex)
+                $("span#province").append(info.province)
+                $("span#classId").append(info.classId)
+                $("span#major").append(info.major)
+                var scores=data.scores
+                var table=$("tbody#score")
+                for(var key in scores){
+                    var score=scores[key]
+                    table.append("<tr>" +
+                        "<td>"+score.term_text+"</td>" +
+                        "<td>"+score.term_no+"</td>" +
+                        "<td>"+score.score_name+"</td>" +
+                        "<td>"+(score.score_point/100)+"</td>" +
+                        "<td>"+score.score_type+"</td>" +
+                        "<td>"+score.score_score+"</td>" +
+                        "<td>"+score.score_remark+"</td>" +
+                        "</tr>")
+                }
+            },
             error:function () {
                 alert("fail")
             }
         })
-        var popCanvas = $("#popChart");
-        var popCanvas = document.getElementById("popChart");
-        var popCanvas = document.getElementById("popChart").getContext("2d");
         var barChart = new Chart(popCanvas, {
-            type: 'bar',
+            type: 'line',
             data: {
                 labels: ["China", "India", "United States", "Indonesia", "Brazil", "Pakistan", "Nigeria", "Bangladesh", "Russia", "Japan"],
                 datasets: [{
-                    label: 'Population',
+                    label: '学期绩点一览',
                     data: [1379302771, 1281935911, 326625791, 260580739, 207353391, 204924861, 190632261, 157826578, 142257519, 126451398],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.6)',
@@ -166,7 +219,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <table class="table-striped col-md-12" height="50%">
+                    <table class="table-bordered col-md-12" height="50%">
                         <thead>
                         <tr>
                             <th>学年</th>
@@ -178,30 +231,15 @@
                             <th>备注</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Anna</td>
-                            <td>1</td>
-                            <td>Anna</td>
-                            <td>1</td>
-                            <td>Anna</td>
-                            <td>1</td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Anna</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Debbie</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>John</td>
-                        </tr>
+                        <tbody id="score">
                         </tbody>
                     </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 col-md-offset-9">
+                        <ul id="page" class="pagination pagination-sm">
+                        </ul>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">

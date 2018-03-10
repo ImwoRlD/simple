@@ -2,8 +2,37 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="dao.ScoreDao">
+    <!--private String name;-->
+    <!--private String term_text;-->
+    <!--private Integer term_no;-->
+    <!--private String score_name;-->
+    <!--private Integer score_point;-->
+    <!--private String score_type;-->
+    <!--private String score_score;-->
+    <!--private String score_number;-->
+    <!--private String score_remark;-->
+    <resultMap id="student_score" type="Model.Student_Score">
+        <result column="name" property="name"/>
+        <result column="term_text" property="term_text"/>
+        <result column="term_no" property="term_no"/>
+        <result column="score_name" property="score_name"/>
+        <result column="score_point" property="score_point"/>
+        <result column="score_type" property="score_type"/>
+        <result column="score_score" property="score_score"/>
+        <result column="score_number" property="score_number"/>
+        <result column="score_remark" property="score_remark"/>
+    </resultMap>
     <insert id="saveStudentScore" parameterType="Model.Student_Score_VO" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO student_score (name,term_text,term_no,score_name,score_point,score_type,score_score,score_number,score_remark)
         VALUES (#{studentInfo.name},#{term.text},#{term.termNum},#{score.name},#{score.point},#{score.type},#{score.score},#{score.number},#{score.remark})
     </insert>
+    <select id="getScoreByPage"  resultMap="student_score">
+        select * from student_score where name in (select name from studentinfo where loginName=#{0}) limit #{1},10;
+    </select>
+    <select id="getCountByUsername" resultType="java.lang.Integer">
+        select count(*) from student_score where name=#{name};
+    </select>
+    <select id="getPointMap" resultType="java.util.HashMap">
+        select term_text,term_no,sum(score_point) as 总学分,count(*) as 选课数 from student_score where name=#{name} group by term_text,term_no;
+    </select>
 </mapper>

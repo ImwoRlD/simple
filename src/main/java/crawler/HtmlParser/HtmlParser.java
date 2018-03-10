@@ -77,6 +77,7 @@ public class HtmlParser {
                 score.setType(type);
                 score.setScore(sco);
                 score.setNumber(ParseUtil.parseNumScore(sco));
+                score.setRemark("无");
                 CastUtil.addScoreToScoreMap(map, term, score);
             }
         }
