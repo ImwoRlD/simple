@@ -19,8 +19,7 @@ public class Main {
         json.addLabel("第二个label");
         json.addDatasetLabel("dsl1");
         json.addDatasetLabel("dsl2");
-        json.addDatasetData("dsl1",213);
-        json.addDatasetData("dsl2",31231);
+
         JSONObject js=json.build();
         System.out.print(js);
     }

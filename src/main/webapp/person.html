@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="/js/Chart.js"></script>
+    <title>个人数据页面</title>
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<script type="text/javascript">
+    function exchange(obj) {
+        var page=obj.text
+        $.ajax({
+            type:"get",
+            url:"/getscore",
+            data:{"page":page},
+            dataType:"json",
+            success:function (data) {
+                var scores=data.scores
+                var table=$("tbody#score")
+                table.empty();
+                for(var key in scores){
+                    var score=scores[key]
+                    table.append("<tr>" +
+                        "<td>"+score.term_text+"</td>" +
+                        "<td>"+score.term_no+"</td>" +
+                        "<td>"+score.score_name+"</td>" +
+                        "<td>"+(score.score_point/100)+"</td>" +
+                        "<td>"+score.score_type+"</td>" +
+                        "<td>"+score.score_score+"</td>" +
+                        "<td>"+score.score_remark+"</td>" +
+                        "</tr>")
+                }
+            },
+            error:function () {
+                alert("ajax error")
+            }
+        })
+    }
+</script>
+<script>
+    $(function(){
+        var popCanvas = document.getElementById("popChart").getContext("2d");
+        var popCanvas1 = document.getElementById("popChart1").getContext("2d");
+        var popCanvas2 = document.getElementById("popChart4").getContext("2d");
+        var popCanvas3 = document.getElementById("popChart3").getContext("2d");
+        $.ajax({
+            type:"get",
+            url:"/persondata",
+            data:{"page":1},
+            dataType:"json",
+            success:function(data){
+                var barChart = new Chart(popCanvas,{
+                    type:'line',
+                    data:data.point
+                });
+                var barChart1 = new Chart(popCanvas1,{
+                    type:'line',
+                    data:data.score
+                })
+                var pieChar=new Chart(popCanvas2,{
+                    type:'pie',
+                    data:data.pie
+                })
+                var typeChart=new Chart(popCanvas3,{
+                    type:'bar',
+                    data:data.type
+                })
+                var count=data.countPage
+                var page=$("#page")
+                for(var i=1;i<=count;i++){
+                    page.append("<li><a onclick='exchange(this)'>"+i+"</a></li>")
+                }
+                var info=data.info
+                $("span#name").append(info.name)
+                $("span#sex").append(info.sex)
+                $("span#province").append(info.province)
+                $("span#classId").append(info.classId)
+                $("span#major").append(info.major)
+                var scores=data.scores
+                var table=$("tbody#score")
+                for(var key in scores){
+                    var score=scores[key]
+                    table.append("<tr>" +
+                        "<td>"+score.term_text+"</td>" +
+                        "<td>"+score.term_no+"</td>" +
+                        "<td>"+score.score_name+"</td>" +
+                        "<td>"+(score.score_point/100)+"</td>" +
+                        "<td>"+score.score_type+"</td>" +
+                        "<td>"+score.score_score+"</td>" +
+                        "<td>"+score.score_remark+"</td>" +
+                        "</tr>")
+                }
+            },
+            error:function () {
+                alert("fail")
+            }
+        });
+    })
+</script>
+<body>
+    <div id="background">
+        <div class="container">
+            <div class="row" >
+                <div class="col-md-2"><span id="name" class="label label-default">姓名:</span></div>
+                <div class="col-md-2"><span id="birthday" class="label label-primary">生日:</span></div>
+                <div class="col-md-2"><span id="sex" class="label label-success">性别:</span></div>
+                <div class="col-md-2"><span id="province" class="label label-info">省份:</span></div>
+                <div class="col-md-2"><span id="classId" class="label label-warning">班级:</span></div>
+                <div class="col-md-2"><span id="major" class="label label-danger">专业:</span></div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table-bordered col-md-12" height="50%">
+                        <thead>
+                        <tr>
+                            <th>学年</th>
+                            <th>学期</th>
+                            <th>课程名</th>
+                            <th>课程学分</th>
+                            <th>课程类型</th>
+                            <th>课程成绩</th>
+                            <th>备注</th>
+                        </tr>
+                        </thead>
+                        <tbody id="score">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 col-md-offset-9">
+                        <ul id="page" class="pagination pagination-sm">
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <canvas id="popChart"></canvas>
+                    </div>
+                    <div class="col-md-6">
+                        <canvas id="popChart1"></canvas>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <canvas id="popChart3"></canvas>
+                    </div>
+                    <div class="col-md-6">
+                        <canvas id="popChart4"></canvas>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <canvas id="popChart5"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

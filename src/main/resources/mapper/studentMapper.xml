@@ -10,4 +10,21 @@
         select * FROM studentinfo
         where loginName=#{username};
     </select>
+    <select id="getClazz" resultType="java.lang.String">
+        select distinct classId from studentinfo;
+    </select>
+    <select id="getAllAvg" resultType="java.util.HashMap">
+        select studentinfo.name,avg(score_number) from studentinfo inner join student_score on studentinfo.name=student_score.name where classId=#{classId} group by studentinfo.name;
+    </select>
+    <select id="getProvinces" resultType="java.util.HashMap">
+        select province,count(*) as total from studentinfo where classId=#{classId} group by province;
+    </select>
+    <select id="getCount" resultType="int">
+        SELECT count(*) from studentinfo;
+    </select>
+    <select id="getAge" resultType="java.util.HashMap">
+        select name,(CurDate()-birthday)/10000 as '年龄'
+        from studentinfo
+        where classId=#{clazz};
+    </select>
 </mapper>

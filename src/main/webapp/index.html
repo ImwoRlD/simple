@@ -8,8 +8,13 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href='https://fonts.googleapis.com/css?family=League+Script' rel='stylesheet' type='text/css'>
 
+        <link rel='stylesheet prefetch' href='https://fonts.googleapis.com/css?family=Bad+Script|Gruppo|Kumar+One+Outline|League+Script|Londrina+Outline|Monoton|Sriracha|Yellowtail&text=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789?+'>
+
+        <link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script  src="js/index.js"></script>
         <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
         <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     </head>
@@ -19,7 +24,7 @@
             $("input[name=sessionId]").val(uuid)
             $.ajax({
                 type:"get",
-                url:"/getcaptcha",
+                url:"/login/getcaptcha",
                 data:{"sessionId":uuid},
                 dataType:"json",
                 success:function (data) {
@@ -31,20 +36,28 @@
             });
             $("#radio1").click(function(){
                 $("div#captcha").removeAttr("hidden");
+                $("div#pass").removeAttr("hidden")
 
             });
             $("#radio2").click(function(){
                 $("div#captcha").attr("hidden","")
+                $("div#pass").attr("hidden","")
             });
         })
     </script>
     <body>
         <div class="container">
             <div class="row">
-                <div class="col-6" align="center"><h1>学生成绩爬取分析系统</h1></div>
+                <div class="col-6" align="center">
+                    <h1>
+                        <x-sign>
+                            学生成绩爬取与分析<br>系统
+                        </x-sign>
+                    </h1>
+                </div>
             </div>
             <div class="row">
-                <form class="form-horizontal" role="form" action="/datafetch" method="post">
+                <form class="form-horizontal" role="form" action="/login/submit" method="post">
                     <input type="hidden" name="sessionId" value="">
                     <div class="form-group">
                         <label for="username" class="col-2 control-label">账号</label>
@@ -53,7 +66,7 @@
                                    placeholder="请输入账号">
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="pass" hidden>
                         <label for="password" class="col-2 control-label">密码</label>
                         <div class="col-10">
                             <input type="text" class="form-control" name="password" id="password"
@@ -69,25 +82,35 @@
                         <div id="img"></div>
                     </div>
                     <div class="form-group">
-                        <label class="col-2 control-label">登录类型</label>
+                        <label class="col-2 control-label">类型</label>
                         <div class="col-10">
                             <label class="radio-inline">
                                 <input type="radio" name="type" id="radio1" value="option1"> 数据爬取
                             </label>
                             <label class="radio-inline">
-                                <input type="radio" name="type" id="radio2" value="option1"> 个人数据
-                            </label>
-                            <label class="radio-inline">
-                                <input type="radio" name="type" id="radio3"  value="option3"> 整体数据
+                                <input type="radio" name="type" id="radio2" value="option2" checked> 个人数据
                             </label>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-offset-2 col-10">
-                            <button type="submit" id="login" class="btn btn-default">登录</button>
+                            <button type="submit" id="login" class="btn btn-default">Go!</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-offset-2 col-10">
+                            <button type="button" id="total" class="btn btn-default"><a href="total.html">整体数据</a></button>
                         </div>
                     </div>
                 </form>
+            </div>
+            <div class="row">
+                <div align="center">
+                    <img width="20%" src="img/back1.JPG">
+                    <img width="20%" src="img/back2.JPG">
+                    <img width="20%" src="img/back3.JPG">
+                    <img width="20%" src="img/back4.JPG">
+                </div>
             </div>
         </div>
     </body>

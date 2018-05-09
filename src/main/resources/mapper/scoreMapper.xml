@@ -26,13 +26,51 @@
         INSERT INTO student_score (name,term_text,term_no,score_name,score_point,score_type,score_score,score_number,score_remark)
         VALUES (#{studentInfo.name},#{term.text},#{term.termNum},#{score.name},#{score.point},#{score.type},#{score.score},#{score.number},#{score.remark})
     </insert>
-    <select id="getScoreByPage"  resultMap="student_score">
-        select * from student_score where name in (select name from studentinfo where loginName=#{0}) limit #{1},10;
+    <select id="getScoreByPage"  resultMap="student_score   ">
+        select * from student_score where name in (select name from studentinfo where loginName=#{0}) order BY term_text,term_no limit #{1},10;
     </select>
     <select id="getCountByUsername" resultType="java.lang.Integer">
         select count(*) from student_score where name=#{name};
     </select>
     <select id="getPointMap" resultType="java.util.HashMap">
         select term_text,term_no,sum(score_point) as 总学分,count(*) as 选课数 from student_score where name=#{name} group by term_text,term_no;
+    </select>
+    <select id="getScoreMap" resultType="java.util.HashMap">
+        select term_text,term_no,avg(score_number) as 平均成绩 from student_score where name=#{name} GROUP by term_text,term_no;
+    </select>
+    <select id="getScoreDis" resultType="java.util.HashMap">
+        select count((score_number&lt;60)or null) as '60以下',
+               count((score_number&gt;=60 and score_number&lt;70)or null) as '60-70',
+               count((score_number&gt;=70 and score_number&lt;80)or null) as '70-80',
+               count((score_number&gt;=80 and score_number&lt;90) or null) as '80-90',
+               count((score_number&gt;=90)or null) as '90-100' from student_score
+               where name=#{name};
+    </select>
+    <select id="getType" resultType="java.util.HashMap">
+        select score_type as '类型',count(*) as '门数',sum(score_point) as '总学分' from student_score where name=#{name} group by score_type ;
+    </select>
+    <select id="getNumber" resultType="java.util.HashMap">
+        select studentinfo.name,(1-count((score_remark='不及格')or null)/count(*))*100 as 及格率,avg(score_number) as 平均分
+        from student_score inner join studentinfo on student_score.name=studentinfo.name
+        where classId=#{clazz}
+        group by name
+        order by 平均分 desc
+    </select>
+    <select id="getFailCount" resultType="java.util.HashMap">
+        select score_name,count(*) as total from studentinfo inner join student_score on studentinfo.name=student_score.name where classId=#{classId} and score_remark='不及格' group by score_name;
+    </select>
+    <select id="getAvg" resultType="java.util.HashMap">
+        select score_name,avg(score_number) as '平均分'
+        from studentinfo inner join student_score on studentinfo.name=student_score.name
+        where classId=#{clazz}
+        group by score_name
+        order by avg(score_number) DESC ;
+    </select>
+    <select id="getPass" resultType="java.util.HashMap">
+        select score_name,(count((score_number>60)or null)/count(*))*100 as '及格率'
+        from studentinfo inner join student_score on studentinfo.name=student_score.name
+        where classId=#{clazz}
+        group by score_name
+        order by (count((score_number>60)or null)/count(*))*100 asc;
     </select>
 </mapper>

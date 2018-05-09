@@ -44,4 +44,34 @@ public class CastUtil {
         }
         return url;
     }
+
+    public static String parseColor(String color) {
+        String ro;
+        switch (color){
+            case "red":
+                ro="rgba(208,32,144,0.6)";
+                break;
+            case "orange":
+                ro="rgba(255,245,238,0.6)";
+                break;
+            case "yellow":
+                ro="rgba(124,252,0,0.6)";
+                break;
+            case "green":
+                ro="rgba(65,105,225,0.6)";
+                break;
+            case "blue":
+                ro="rgba(0,191,255,0.6)";
+                break;
+            case "purple":
+                ro="rgba(160,32,240,0.6)";
+                break;
+            case "black":
+                ro="rgba(28,28,28,0.6)";
+                break;
+            default:
+                ro="rgba(112,128,144,0.6)";
+        }
+        return ro;
+    }
 }

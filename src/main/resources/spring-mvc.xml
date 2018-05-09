@@ -22,10 +22,10 @@
     <mvc:resources mapping="/images/**" location="/WEB-INF/img/" />
     <mvc:resources mapping="/js/**" location="/WEB-INF/js/" />
 
-    <!-- 配置jsp 显示ViewResolver -->
+    <!--配置视图-->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
-        <property name="prefix" value=""/>
+        <property name="prefix" value="/"/>
         <property name="suffix" value=".html"/>
     </bean>
 

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="/js/Chart.js"></script>
+    <title>Title</title>
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<script>
+    function selChange(obj) {
+        var popCanvas = document.getElementById("popChart").getContext("2d");
+        var provin = document.getElementById("provin").getContext("2d");
+        var age = document.getElementById("age").getContext("2d");
+        var avg = document.getElementById("avgnum").getContext("2d");
+        var pass = document.getElementById("passnumber").getContext("2d");
+        if(obj!='----请选择班级----'){
+            var table1=$("tbody#score")
+            var table2=$("tbody#avgscore")
+            var table3=$("tbody#passnum")
+            table1.empty()
+            table2.empty()
+            $.ajax({
+                type:"get",
+                url:"/clazz",
+                data:{"clazz":obj},
+                dataType:"json",
+                success:function (data) {
+                    console.log(data.avg)
+                    for(var key in data.gpa){
+                        var temp=data.gpa[key]
+                        $("#score").append("<tr>" +
+                            "<td>"+temp.name+"</td>" +
+                            "<td>"+temp.pass+"</td>" +
+                            "<td>"+temp.avg+"</td>" +
+                            "</tr>")
+                    }
+                    for(var key in data.avg){
+                        var temp=data.avg[key]
+                        $("#avgscore").append("<tr>" +
+                            "<td>"+temp.scorename+"</td>" +
+                            "<td>"+temp.avgnumber+"</td>" +
+                            "</tr>")
+                    }
+                    for(var key in data.pass){
+                        var temp=data.pass[key]
+                        $("#passnum").append("<tr>" +
+                            "<td>"+temp.scorename+"</td>" +
+                            "<td>"+temp.passnumber+"</td>" +
+                            "</tr>")
+                    }
+                    var typeChart=new Chart(popCanvas,{
+                        type:'bar',
+                        data:data.picone
+                    })
+                    var provinChart=new Chart(provin,{
+                        type:'pie',
+                        data:data.picthree
+                    })
+                    var ageChart=new Chart(age,{
+                        type:'bar',
+                        data:data.pictwo
+                    })
+                    var avgChart=new Chart(avg,{
+                        type:'bar',
+                        data:data.picfive
+                    })
+                    var passChart=new Chart(pass,{
+                        type:'bar',
+                        data:data.picfour
+                    })
+                },
+                error:function () {
+                    alert("fail")
+                }
+            })
+        }
+    }
+</script>
+<script>
+    $(function(){
+        $.ajax({
+            type:"get",
+            url:"/getClazz",
+            dataType:"json",
+            success:function (data) {
+                for (var key in data.clazz){
+                    var str=data.clazz[key]
+                    $("#class").append("<option>"+str+"</option>")
+                }
+            },
+            error:function () {
+                alert("fail")
+            }
+        })
+    })
+</script>
+<body>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <h1>
+                整体数据分析
+            </h1>
+            <br>
+            <br>
+            <div class="row clearfix">
+                <div class="col-md-2 column">
+                    <select id="class" onchange="selChange(this.options[this.options.selectedIndex].text)">
+                        <option selected>----请选择班级----</option>
+                    </select>
+                </div>
+                <div class="col-md-2 column">
+
+                </div>
+                <div class="col-md-2 column">
+
+                </div>
+                <div class="col-md-2 column">
+
+                </div>
+                <div class="col-md-2 column">
+
+                </div>
+                <div class="col-md-2 column">
+
+                </div>
+            </div>
+            <br>
+            <br>
+            <div class="row clearfix">
+                <div class="col-md-12 column">
+                    <ul id="myTab" class="nav nav-tabs">
+                        <li class="active" id="op1"><a href="#gpa" data-toggle="tab">平均分排行</a></li>
+                        <li id="op2"><a href="#province" data-toggle="tab">地域分布/年龄分布</a></li>
+                        <li id="op3"><a href="#pass" data-toggle="tab">科目及格率</a></li>
+                        <li id="op4"><a href="#avg" data-toggle="tab">科目平均分</a></li>
+                    </ul>
+                    <div id="myTabContent" class="tab-content">
+                        <div class="tab-pane fade in active" id="gpa">
+                            <div class="col-md-7 column">
+                                <table class="table-bordered col-md-12" height="50%" id="table1">
+                                    <thead>
+                                    <tr>
+                                        <th>姓名</th>
+                                        <th>及格率</th>
+                                        <th>平均分</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="score">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-5 column">
+                                <canvas id="popChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="province">
+                            <div class="col-md-6 column">
+                                <canvas id="provin"></canvas>
+                            </div>
+                            <div class="col-md-6 column">
+                                <canvas id="age"></canvas>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="pass">
+                            <div class="col-md-7 column">
+                                <table class="table-bordered col-md-12" height="50%" id="table3">
+                                    <thead>
+                                    <tr>
+                                        <th>课程名</th>
+                                        <th>及格率</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="passnum">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-5 column">
+                                <canvas id="passnumber"></canvas>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="avg">
+                            <div class="col-md-7 column">
+                                <table class="table-bordered col-md-12" height="50%" id="table2">
+                                    <thead>
+                                    <tr>
+                                        <th>课程名</th>
+                                        <th>平均分</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="avgscore">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-5 column">
+                                <canvas id="avgnum"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+        </div>
+    </div>
+</div>
+</body>
+</html>
